@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 
 public class SteamManager : Node
 {
-    const int APP_ID = 480;
-    const int MaximumReceivedMessages = 16;
+    public const int AppID = 480;
+    public const int MaximumReceivedMessages = 16;
     public static string steamName;
     public static CSteamID steamID;
 
-    private static IntPtr sendBuffer = Marshal.AllocHGlobal(1024);
+    private static IntPtr _sendBuffer = Marshal.AllocHGlobal(1024);
 
     public override void _Ready()
     {
@@ -43,7 +43,7 @@ public class SteamManager : Node
 
         try
         {
-            if (SteamAPI.RestartAppIfNecessary((AppId_t)APP_ID))
+            if (SteamAPI.RestartAppIfNecessary((AppId_t)AppID))
             {
                 GD.Print("Restarting through steam...");
                 GetTree().Quit();
@@ -79,10 +79,10 @@ public class SteamManager : Node
         HSteamNetConnection connection, byte[] message, int nSendFlags = Constants.k_nSteamNetworkingSend_Unreliable
     )
     {
-        Marshal.Copy(message, 0, sendBuffer, message.Length);
+        Marshal.Copy(message, 0, _sendBuffer, message.Length);
         long messageNumber;
         SteamNetworkingSockets.SendMessageToConnection(
-            connection, sendBuffer, (uint)message.Length, nSendFlags, out messageNumber
+            connection, _sendBuffer, (uint)message.Length, nSendFlags, out messageNumber
         );
     }
 

@@ -6,7 +6,7 @@ using Steamworks;
 public class Global : Node
 {
     private bool _playingAsHost = false;
-    public bool playingAsHost
+    public bool PlayingAsHost
     {
         get { return _playingAsHost; }
         set
@@ -14,14 +14,14 @@ public class Global : Node
             setPlayingAsHost(value);
         }
     }
-    public HSteamNetConnection? connectionToHost = null;
-    public Dictionary<CSteamID, HSteamNetConnection> connectionBySteamID = new Dictionary<CSteamID, HSteamNetConnection>();
-    public CSteamID currentLobbyID;
-    public CSteamID hostID;
+    public HSteamNetConnection? ConnectionToHost = null;
+    public Dictionary<CSteamID, HSteamNetConnection> ConnectionBySteamID = new Dictionary<CSteamID, HSteamNetConnection>();
+    public CSteamID CurrentLobbyID;
+    public CSteamID HostID;
 
     public const float GravityAcceleration = 400.0F;
 
-    private static Dictionary<String, bool> ErrorCollection = new Dictionary<String, bool>();
+    private static Dictionary<String, bool> _errorCollection = new Dictionary<String, bool>();
 
     public void setPlayingAsHost(bool p_playingAsHost)
     {
@@ -32,21 +32,21 @@ public class Global : Node
 
     public void PushErrorOnce(String errorString)
     {
-        if (ErrorCollection.ContainsKey(errorString))
+        if (_errorCollection.ContainsKey(errorString))
         {
             return;
         }
         GD.PushError(errorString);
-        ErrorCollection[errorString] = true;
+        _errorCollection[errorString] = true;
     }
 
     public void PushWarningOnce(String warningString)
     {
-        if (ErrorCollection.ContainsKey(warningString))
+        if (_errorCollection.ContainsKey(warningString))
         {
             return;
         }
         GD.PushWarning(warningString);
-        ErrorCollection[warningString] = true;
+        _errorCollection[warningString] = true;
     }
 }

@@ -5,10 +5,7 @@ using Godot.Collections;
 
 public class SteamHLM : Node
 {
-    private static Global global;
-    public static Dictionary<String, RemoteCallType> RPCMap = new Dictionary<String, RemoteCallType>();
-
-    private enum PacketType
+    public enum PacketType
     {
         RPC,
     }
@@ -19,6 +16,10 @@ public class SteamHLM : Node
         Puppet,       // execute RPC only if the recipient is *not* the owner of the node
         Master        // execute RPC only if the recipient is the owner of the node
     }
+
+    public static Dictionary<String, RemoteCallType> RPCMap = new Dictionary<String, RemoteCallType>();
+    private static Global global;
+
     public override void _Ready()
     {
         global = GetNode<Global>("/root/Global");
@@ -26,9 +27,9 @@ public class SteamHLM : Node
 
     public override void _Process(float delta)
     {
-        if (global.connectionToHost == null)
+        if (global.ConnectionToHost == null)
         {
-            foreach (var item in global.connectionBySteamID)
+            foreach (var item in global.ConnectionBySteamID)
             {
                 CSteamID peerSteamID = item.Key;
                 HSteamNetConnection connectionToPeer = item.Value;
@@ -41,7 +42,7 @@ public class SteamHLM : Node
         }
         else
         {
-            byte[][] newMessages = SteamManager.ReceiveMessages((HSteamNetConnection)global.connectionToHost);
+            byte[][] newMessages = SteamManager.ReceiveMessages((HSteamNetConnection)global.ConnectionToHost);
             for (int i = 0; i < newMessages.Length; i++)
             {
                 UnpackMessage(newMessages[i]);
@@ -87,7 +88,7 @@ public class SteamHLM : Node
         int sendFlags = Constants.k_nSteamNetworkingSend_Reliable
     )
     {
-        TrySendRPC(global.connectionToHost, global.hostID, node, method, arguments);
+        TrySendRPC(global.ConnectionToHost, global.HostID, node, method, arguments);
     }
 
     /// <summary>
@@ -101,7 +102,7 @@ public class SteamHLM : Node
         int sendFlags = Constants.k_nSteamNetworkingSend_Reliable
     )
     {
-        HSteamNetConnection connectionToClient = global.connectionBySteamID[clientSteamID];
+        HSteamNetConnection connectionToClient = global.ConnectionBySteamID[clientSteamID];
         TrySendRPC(connectionToClient, clientSteamID, node, method, arguments, sendFlags);
     }
 
@@ -116,7 +117,7 @@ public class SteamHLM : Node
     )
     {
         // foreach (HSteamNetConnection connection in global.connectionBySteamID.Values)
-        foreach (var item in global.connectionBySteamID)
+        foreach (var item in global.ConnectionBySteamID)
         {
             CSteamID recipientSteamID = item.Key;
             HSteamNetConnection connection = item.Value;
@@ -177,7 +178,7 @@ public class SteamHLM : Node
         }
         if (send)
         {
-            if (connection == null && global.playingAsHost)
+            if (connection == null && global.PlayingAsHost)
             {
                 // if we sent this from the server to itself, call locally
                 node.Callv(method, new Godot.Collections.Array(arguments));
