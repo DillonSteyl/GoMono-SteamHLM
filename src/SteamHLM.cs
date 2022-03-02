@@ -11,10 +11,14 @@ public class SteamHLM : Node
     }
     public enum RemoteCallType
     {
-        Remote,       // execute RPC regardless of the "owner" of the node
-        RemoteSync,   // executes RPC on both the calling peer and the recipient.
-        Puppet,       // execute RPC only if the recipient is *not* the owner of the node
-        Master        // execute RPC only if the recipient is the owner of the node
+        /// <summary>Execute RPC regardless of the owner of the node.</summary>
+        Remote,
+        /// <summary>Execute RPC on both the calling peer and the recipient.</summary>
+        RemoteSync,
+        /// <summary>Execute RPC only if the recipient is not the owner of the node.</summary>
+        Puppet,
+        /// <summary>Execute RPC only if the recipient is the owner of the node</summary>     
+        Master
     }
 
     public static Dictionary<String, RemoteCallType> RPCMap = new Dictionary<String, RemoteCallType>();
@@ -67,12 +71,7 @@ public class SteamHLM : Node
         RPCMap[GetRPCHash(node.GetPath(), methodName)] = remoteCallType;
     }
 
-    private static String GetRPCHash(
-        NodePath nodePath, String methodName
-    )
-    {
-        return nodePath.ToString() + "::" + methodName;
-    }
+    private static String GetRPCHash(NodePath nodePath, String methodName) => nodePath.ToString() + "::" + methodName;
 
     // ================================================================================
     // Sending RPCs

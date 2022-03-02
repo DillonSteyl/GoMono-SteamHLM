@@ -7,8 +7,9 @@ public class SteamManager : Node
 {
     public const int AppID = 480;
     public const int MaximumReceivedMessages = 16;
-    public static string steamName;
-    public static CSteamID steamID;
+
+    public static string SteamName;
+    public static CSteamID SteamID;
 
     private static IntPtr _sendBuffer = Marshal.AllocHGlobal(1024);
 
@@ -67,8 +68,8 @@ public class SteamManager : Node
             GD.PushError("Unable to initialise Steamworks API. Make sure steam is launched.");
             GetTree().Quit();
         }
-        steamName = SteamFriends.GetPersonaName();
-        steamID = SteamUser.GetSteamID();
+        SteamName = SteamFriends.GetPersonaName();
+        SteamID = SteamUser.GetSteamID();
     }
 
     // ================================================================================
